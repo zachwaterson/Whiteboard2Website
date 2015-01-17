@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		9283E6571A6A0CB100A7CA44 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9283E6561A6A0CB100A7CA44 /* main.cpp */; };
+		9283E6761A6A151500A7CA44 /* libopencv_core.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6731A6A151500A7CA44 /* libopencv_core.2.4.10.dylib */; };
+		9283E6771A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */; };
+		9283E6781A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +26,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9283E6531A6A0CB100A7CA44 /* OpenCVTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OpenCVTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9283E6531A6A0CB100A7CA44 /* Whiteboard2Website */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Whiteboard2Website; sourceTree = BUILT_PRODUCTS_DIR; };
 		9283E6561A6A0CB100A7CA44 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		9283E6731A6A151500A7CA44 /* libopencv_core.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_core.2.4.10.dylib; sourceTree = "<group>"; };
+		9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_highgui.2.4.10.dylib; sourceTree = "<group>"; };
+		9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_imgproc.2.4.10.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +38,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9283E6761A6A151500A7CA44 /* libopencv_core.2.4.10.dylib in Frameworks */,
+				9283E6771A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib in Frameworks */,
+				9283E6781A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +50,9 @@
 		9283E64A1A6A0CB100A7CA44 = {
 			isa = PBXGroup;
 			children = (
+				9283E6731A6A151500A7CA44 /* libopencv_core.2.4.10.dylib */,
+				9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */,
+				9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */,
 				9283E6551A6A0CB100A7CA44 /* OpenCVTest */,
 				9283E6541A6A0CB100A7CA44 /* Products */,
 			);
@@ -49,7 +61,7 @@
 		9283E6541A6A0CB100A7CA44 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9283E6531A6A0CB100A7CA44 /* OpenCVTest */,
+				9283E6531A6A0CB100A7CA44 /* Whiteboard2Website */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,9 +77,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9283E6521A6A0CB100A7CA44 /* OpenCVTest */ = {
+		9283E6521A6A0CB100A7CA44 /* Whiteboard2Website */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9283E65A1A6A0CB100A7CA44 /* Build configuration list for PBXNativeTarget "OpenCVTest" */;
+			buildConfigurationList = 9283E65A1A6A0CB100A7CA44 /* Build configuration list for PBXNativeTarget "Whiteboard2Website" */;
 			buildPhases = (
 				9283E64F1A6A0CB100A7CA44 /* Sources */,
 				9283E6501A6A0CB100A7CA44 /* Frameworks */,
@@ -77,9 +89,9 @@
 			);
 			dependencies = (
 			);
-			name = OpenCVTest;
+			name = Whiteboard2Website;
 			productName = OpenCVTest;
-			productReference = 9283E6531A6A0CB100A7CA44 /* OpenCVTest */;
+			productReference = 9283E6531A6A0CB100A7CA44 /* Whiteboard2Website */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -96,7 +108,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 9283E64E1A6A0CB100A7CA44 /* Build configuration list for PBXProject "OpenCVTest" */;
+			buildConfigurationList = 9283E64E1A6A0CB100A7CA44 /* Build configuration list for PBXProject "Whiteboard2Website" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -108,7 +120,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9283E6521A6A0CB100A7CA44 /* OpenCVTest */,
+				9283E6521A6A0CB100A7CA44 /* Whiteboard2Website */,
 			);
 		};
 /* End PBXProject section */
@@ -202,21 +214,39 @@
 		9283E65B1A6A0CB100A7CA44 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				PRODUCT_NAME = Whiteboard2Website;
 			};
 			name = Debug;
 		};
 		9283E65C1A6A0CB100A7CA44 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				PRODUCT_NAME = Whiteboard2Website;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		9283E64E1A6A0CB100A7CA44 /* Build configuration list for PBXProject "OpenCVTest" */ = {
+		9283E64E1A6A0CB100A7CA44 /* Build configuration list for PBXProject "Whiteboard2Website" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9283E6581A6A0CB100A7CA44 /* Debug */,
@@ -225,7 +255,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9283E65A1A6A0CB100A7CA44 /* Build configuration list for PBXNativeTarget "OpenCVTest" */ = {
+		9283E65A1A6A0CB100A7CA44 /* Build configuration list for PBXNativeTarget "Whiteboard2Website" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9283E65B1A6A0CB100A7CA44 /* Debug */,
