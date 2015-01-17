@@ -43,6 +43,7 @@ public:
     bool shouldContainAsChild(Element element); //if y and size are less than 80% of key element
 //    bool shouldBeContainedBy(Element element); //if y and size eclipse key element
     void layout();
+    void sortSubrows();
 };
 
 class Page {
@@ -51,8 +52,11 @@ public:
     double pageHeight;
     double pageWidth;
     void addElementWithinRows(cv::Rect rectangle, elementType type, std::vector<Row> &rowVector);
+    void addAndSortElement(cv::Rect rectangle, elementType type, std::vector<Row> &rowVector);
     std::string generateHTML();
     std::vector<Row> rows; //top level rows of page
+    void sortRows();
+    
 
 private:
     std::vector<Element> elements; //list of every element

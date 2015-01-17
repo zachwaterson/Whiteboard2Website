@@ -336,7 +336,7 @@ int main()
     p.pageWidth = 1024;
     p.pageHeight = 728;
     for (int i = 0; i < items.size(); i++) {
-        p.addElementWithinRows(items[i].first, items[i].second, p.rows);
+        p.addAndSortElement(items[i].first, items[i].second, p.rows);
     }
     
     

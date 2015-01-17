@@ -45,6 +45,27 @@ bool Row::shouldContainAsChild(Element element) {
     return false;
 }
 
+void Row::layout() {
+    
+}
+
+struct row_comp
+{
+    inline bool operator() (const Row row1, const Row row2)
+    {
+        return (row1.keyElement.y < row2.keyElement.y ? -1 : 1);
+    }
+};
+
+void Row::sortSubrows() {
+    std::sort(subRows.begin(), subRows.end(), row_comp());
+}
+
+void Page::sortRows() {
+    std::sort(rows.begin(), rows.end(), row_comp());
+
+}
+
 void Page::addElementWithinRows(cv::Rect rectangle, elementType type, std::vector<Row> &rowVector) {
     Element element(rectangle, type);
     
@@ -106,4 +127,9 @@ void Page::addElementWithinRows(cv::Rect rectangle, elementType type, std::vecto
 //    double columnOfTwelve = 12 * rectangle.x / pageWidth;
 //    columnOfTwelve = floor(columnOfTwelve);
     
+}
+
+void Page::addAndSortElement(cv::Rect rectangle, elementType type, std::vector<Row> &rowVector) {
+    addElementWithinRows(rectangle, type, rowVector);
+    sortRows();
 }
