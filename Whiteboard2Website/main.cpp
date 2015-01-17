@@ -77,16 +77,25 @@ int main()
     cv::Mat gray;
     cv::cvtColor(src, gray, CV_BGR2GRAY);
     
+    //threshold image
+    cv::Mat threshed;
+    cv::threshold(gray, threshed, 160, 255, 0);
+    
+    //erode
+    cv::Mat final;
+    cv::Mat eroder = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5,5));
+    cv::erode(threshed, final, eroder);
+    
     // Use Canny instead of threshold to catch squares with gradient shading
     cv::Mat bw;
-    cv::Canny(gray, bw, 0, 50, 5);
+    cv::Canny(final, bw, 0, 50, 5);
     
     // Find contours
     std::vector<std::vector<cv::Point> > contours;
     cv::findContours(bw.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     
     std::vector<cv::Point> approx;
-    cv::Mat dst = src.clone();
+    cv::Mat dst = final.clone();
     
     for (int i = 0; i < contours.size(); i++)
     {
