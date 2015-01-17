@@ -5,30 +5,6 @@
 ////  Created by Zach Waterson on 1/17/15.
 ////  Copyright (c) 2015 Zach Waterson. All rights reserved.
 ////
-//
-//#include <iostream>
-//#include <opencv2/opencv.hpp>
-//
-//using namespace std;
-//using namespace cv;
-//
-//int main (int argc, const char * argv[])
-//{
-//    Mat img = imread("/Users/Zach/Desktop/joey.png"); //Change the image path here.
-//    if (img.data == 0) {
-//        cerr << "Image not found!" << endl;
-//        return -1;
-//    }
-//    namedWindow("image", CV_WINDOW_AUTOSIZE);
-//    imshow("image", img);
-//    waitKey();
-//}
-
-/**
- * Simple shape detector program.
- * It loads an image and tries to find simple shapes (rectangle, triangle, circle, etc) in it.
- * This program is a modified version of `squares.cpp` found in the OpenCV sample dir.
- */
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -49,10 +25,20 @@ static double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0)
     return (dx1*dx2 + dy1*dy2)/sqrt((dx1*dx1 + dy1*dy1)*(dx2*dx2 + dy2*dy2) + 1e-10);
 }
 
+static double distance(cv::Point p1, cv::Point p2) {
+    double dx = p1.x - p2.x;
+    double dy = p1.y - p2.y;
+    return sqrt(dx*dx + dy*dy);
+}
+
+static bool rectContains(cv::Rect r1, cv::Rect r2) {
+    return r1.contains(r2.tl()) && r1.contains(r2.br());
+}
+
 /**
  * Helper function to display text in the center of a contour
  */
-void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour)
+void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& contour, cv::Scalar color = CV_RGB(255, 255, 255))
 {
     int fontface = cv::FONT_HERSHEY_SIMPLEX;
     double scale = 0.4;
@@ -63,8 +49,103 @@ void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& cont
     cv::Rect r = cv::boundingRect(contour);
     
     cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
-    cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), CV_RGB(255,255,255), CV_FILLED);
+    cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), color, CV_FILLED);
     cv::putText(im, label, pt, fontface, scale, CV_RGB(0,0,0), thickness, 8);
+}
+
+void setLabel(cv::Mat& im, const std::string label, cv::Rect r, cv::Scalar color = CV_RGB(255, 255, 255))
+{
+    int fontface = cv::FONT_HERSHEY_SIMPLEX;
+    double scale = 0.4;
+    int thickness = 1;
+    int baseline = 0;
+    
+    cv::Size text = cv::getTextSize(label, fontface, scale, thickness, &baseline);
+    
+    cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
+    cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), color, CV_FILLED);
+    cv::putText(im, label, pt, fontface, scale, CV_RGB(0,0,0), thickness, 8);
+}
+
+bool checkL(std::vector<cv::Point> approx) {
+    cv::Rect bound = cv::boundingRect(approx);
+    double minDist = bound.area() / 150;
+    cv::Point tl = bound.tl();
+    cv::Point tr = tl;
+    tr.x += bound.width;
+    cv::Point bl = tl;
+    bl.y += bound.height;
+    cv::Point br = bound.br();
+    
+    bool foundTL = false;
+    bool foundTR = false;
+    bool foundBL = false;
+    bool foundBR = false;
+    
+    for (int i = 0; i < approx.size(); i++) {
+        if (distance(approx[i], tl) < minDist) {
+            foundTL = true;
+        }
+        if (distance(approx[i], tr) < minDist) {
+            foundTR = true;
+        }
+        if (distance(approx[i], bl) < minDist) {
+            foundBL = true;
+        }
+        if (distance(approx[i], br) < minDist) {
+            foundBR = true;
+        }
+    }
+    
+    return foundTL && foundBL && foundBR && !foundTR;
+}
+
+bool checkP(std::vector<cv::Point> approx) {
+    // Detect and label circles
+    double area = cv::contourArea(approx);
+    cv::Rect r = cv::boundingRect(approx);
+    int radius = r.width / 2;
+
+    if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
+        std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
+        return true;
+    return false;
+}
+
+bool checkT(std::vector<cv::Point> approx) {
+    cv::Rect bound = cv::boundingRect(approx);
+    double minDist = bound.area() / 150;
+    cv::Point tl = bound.tl();
+    cv::Point tr = tl;
+    tr.x += bound.width;
+    cv::Point bl = tl;
+    bl.y += bound.height;
+    
+    bool foundTL = false;
+    bool foundTR = false;
+    bool foundBL = false;
+    
+    for (int i = 0; i < approx.size(); i++) {
+        if (distance(approx[i], tl) < minDist) {
+            foundTL = true;
+        }
+        if (distance(approx[i], tr) < minDist) {
+            foundTR = true;
+        }
+        if (distance(approx[i], bl) < minDist) {
+            foundBL = true;
+        }
+    }
+    return foundTL && foundTR && !foundBL;
+}
+
+cv::Rect findContainer(cv::Rect r, std::vector<cv::Rect> rects) {
+    for (int i = 0; i < rects.size(); i++) {
+        if (rectContains(rects[i], r)) {
+            return rects[i];
+        }
+    }
+    return cv::Rect();
 }
 
 int main()
@@ -85,7 +166,7 @@ int main()
     
     //threshold image
     cv::Mat threshed;
-    cv::threshold(gray, threshed, 160, 255, 0);
+    cv::threshold(gray, threshed, 140, 255, 0);
     
     //erode
     cv::Mat final;
@@ -98,10 +179,17 @@ int main()
     
     // Find contours
     std::vector<std::vector<cv::Point> > contours;
-    cv::findContours(bw.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+    cv::findContours(bw.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
     
     std::vector<cv::Point> approx;
     cv::Mat dst = final.clone();
+    cv::Mat empty = cv::Mat::zeros(final.size().height, final.size().width, CV_8UC1);
+    
+    std::vector<cv::Rect> boxes;
+    std::vector<std::pair<cv::Rect, int>> items;
+    
+    // We must save these intially so we can analyze them once all of the bounding boxes have been located
+    std::vector<std::vector<cv::Point>> symbols;
     
     for (int i = 0; i < contours.size(); i++)
     {
@@ -109,16 +197,38 @@ int main()
         // to the contour perimeter
         cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true)*0.02, true);
         
+        bool alreadyFound = false;
+        for (int j = 0; j < boxes.size() && !alreadyFound; j++) {
+            cv::Rect bound = cv::boundingRect(approx);
+
+            if(distance(boxes[j].tl(), bound.tl()) < (bound.width / 5))
+                alreadyFound = true;
+        }
+        
+        if(alreadyFound) {
+            contours.erase(contours.begin() + i);
+            i--;
+            continue;
+        }
+        
+        boxes.push_back(cv::boundingRect(approx));
+
+        
         cv::rectangle(dst, cv::boundingRect(approx), cv::Scalar(0,255,255));
-        // Skip small or non-convex objects
-        if (std::fabs(cv::contourArea(contours[i])) < 100 || !cv::isContourConvex(approx))
+        // Skip small objects
+        if (std::fabs(cv::contourArea(contours[i])) < 100)
             continue;
         
-        if (approx.size() == 3)
-        {
-            setLabel(dst, "TRI", contours[i]);    // Triangles
+        cv::Scalar color(128, 255, 255);
+        for (int j = 0; j < approx.size()-1; j++) {
+            cv::line(empty, approx[j], approx[j+1], color);
         }
-        else if (approx.size() >= 4 && approx.size() <= 6)
+        cv::line(empty, approx.front(), approx.back(), color);
+        
+        
+        // Otherwise, start looking for shapes
+        //setLabel(dst, "SHAPE", contours[i]);
+        if (approx.size() >= 4 && approx.size() <= 6)
         {
             // Number of vertices of polygonal curve
             int vtc = (int)approx.size();
@@ -138,26 +248,82 @@ int main()
             // Use the degrees obtained above and the number of vertices
             // to determine the shape of the contour
             //if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
-            if (vtc == 4 )
-                setLabel(dst, "RECT", contours[i]);
-            else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
-                setLabel(dst, "PENTA", contours[i]);
-            else if (vtc == 6 && mincos >= -0.55 && maxcos <= -0.45)
-                setLabel(dst, "HEXA", contours[i]);
+            if (vtc == 4 && mincos >= -0.4 && maxcos <= 0.4) {
+                //setLabel(dst, "RECT", contours[i]);
+                continue;
+            }
+//            else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
+//                setLabel(dst, "PENTA", contours[i]);
+//            else if (vtc == 6 && mincos >= -0.55 && maxcos <= -0.45)
+//                setLabel(dst, "HEXA", contours[i]);
         }
-        else
-        {
-            // Detect and label circles
-            double area = cv::contourArea(contours[i]);
-            cv::Rect r = cv::boundingRect(contours[i]);
-            int radius = r.width / 2;
-            
-            if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
-                std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
-                setLabel(dst, "CIR", contours[i]);
+        
+        //Save the symbols for later now
+        symbols.push_back(approx);
+    }
+    
+    // Now go through all of the symbols
+    for (int i = 0; i < symbols.size(); i++) {
+        approx = symbols[i];
+        //Symbol Recognition
+        if (checkT(approx)) {
+            setLabel(dst, "TEXT", approx);
+            cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
+            cv::rectangle(dst, div, cv::Scalar(255,255,0));
+            items.push_back(std::make_pair(div, 0));
+            continue;
+        }
+        if (checkL(approx)) {
+            setLabel(dst, "LINK", approx);
+            cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
+            cv::rectangle(dst, div, cv::Scalar(244,188,244));
+            items.push_back(std::make_pair(div, 1));
+            continue;
+        }
+        if (checkP(approx)) {
+            setLabel(dst, "PIC", approx);
+            cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
+            cv::rectangle(dst, div, cv::Scalar(244,244,188));
+            items.push_back(std::make_pair(div, 2));
+            continue;
         }
     }
     
+//    cv::drawContours( empty, contours, 10, cv::Scalar(128,255,255), 3);
+    
+//    for (int i = 0; i < contours.size(); i++){
+//        drawContours(empty, contours, i, color, 1, 8);
+//    }
+//    for (int i = 0; i < contours.size(); i++) {
+//        for (int j = 0; j < contours[i].size(); j++) {
+//            cv::line(empty, contours[i][j], contours[i][j], color);
+//        }
+//    }
+    
+    //Draw a new image with the site on it
+    cv::Mat res = cv::Mat::zeros(final.size().height, final.size().width, CV_8UC1);
+    for (int i = 0; i < items.size(); i++) {
+        cv::rectangle(res, items[i].first, CV_RGB(128, 255, 255));
+        std::string type = "";
+        switch (items[i].second) {
+            case 0:
+                type = "TEXT";
+                break;
+            case 1:
+                type = "LINK";
+                break;
+            case 2:
+                type = "PIC";
+                break;
+            default:
+                break;
+        }
+        setLabel(res, type, items[i].first, CV_RGB(128, 255, 255));
+    }
+    
+    
+    imshow("contours", empty);
+    cv::imshow("results", res);
     cv::imshow("dst", dst);
     cv::waitKey(0);
     return 0;
