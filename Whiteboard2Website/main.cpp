@@ -69,7 +69,7 @@ void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& cont
 int main()
 {
     //cv::Mat src = cv::imread("polygon.png");
-    cv::Mat src = cv::imread("/Users/Zach/Desktop/whiteboard-small.jpg");
+    cv::Mat src = cv::imread("/Users/kylekoser/Downloads/whiteboard-small.jpg");
     if (src.empty())
         return -1;
     
@@ -103,6 +103,7 @@ int main()
         // to the contour perimeter
         cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true)*0.02, true);
         
+        cv::rectangle(dst, cv::boundingRect(approx), cv::Scalar(0,255,255));
         // Skip small or non-convex objects
         if (std::fabs(cv::contourArea(contours[i])) < 100 || !cv::isContourConvex(approx))
             continue;
@@ -130,7 +131,8 @@ int main()
             
             // Use the degrees obtained above and the number of vertices
             // to determine the shape of the contour
-            if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
+            //if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
+            if (vtc == 4 )
                 setLabel(dst, "RECT", contours[i]);
             else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
                 setLabel(dst, "PENTA", contours[i]);
@@ -150,7 +152,6 @@ int main()
         }
     }
     
-    cv::imshow("src", src);
     cv::imshow("dst", dst);
     cv::waitKey(0);
     return 0;
