@@ -84,7 +84,7 @@ int main()
     
     //threshold image
     cv::Mat threshed;
-    cv::threshold(gray, threshed, 160, 255, 0);
+    cv::threshold(gray, threshed, 140, 255, 0);
     
     //erode
     cv::Mat final;
@@ -97,10 +97,12 @@ int main()
     
     // Find contours
     std::vector<std::vector<cv::Point> > contours;
-    cv::findContours(bw.clone(), contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+    cv::findContours(bw.clone(), contours, CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
     
     std::vector<cv::Point> approx;
     cv::Mat dst = final.clone();
+    
+    std::vector<cv::Rect> boxes;
     
     for (int i = 0; i < contours.size(); i++)
     {
@@ -108,16 +110,33 @@ int main()
         // to the contour perimeter
         cv::approxPolyDP(cv::Mat(contours[i]), approx, cv::arcLength(cv::Mat(contours[i]), true)*0.02, true);
         
+        bool alreadyFound = false;
+        for (int j = 0; j < boxes.size() && !alreadyFound; j++) {
+            cv::Rect bound = cv::boundingRect(approx);
+
+            double dx = boxes[j].tl().x - bound.tl().x;
+            double dy = boxes[j].tl().y - bound.tl().y;
+            if(sqrt(dx*dx + dy*dy) < 15)
+                alreadyFound = true;
+            
+            //std::cout<<boxes[j].tl().x<<", "<<boxes[j].tl().y<<" vs "<<bound.tl().x<<", "<<bound.tl().y<<" dist: "<<sqrt(dx*dx + dy*dy)<<std::endl;
+        }
+        
+        if(alreadyFound) {
+            continue;
+        }
+        
+        boxes.push_back(cv::boundingRect(approx));
+
+        
         cv::rectangle(dst, cv::boundingRect(approx), cv::Scalar(0,255,255));
-        // Skip small or non-convex objects
-        if (std::fabs(cv::contourArea(contours[i])) < 100 || !cv::isContourConvex(approx))
+        // Skip small objects
+        if (std::fabs(cv::contourArea(contours[i])) < 100)
             continue;
         
-        if (approx.size() == 3)
-        {
-            setLabel(dst, "TRI", contours[i]);    // Triangles
-        }
-        else if (approx.size() >= 4 && approx.size() <= 6)
+        // Otherwise, start looking for shapes
+        //setLabel(dst, "SHAPE", contours[i]);
+        if (approx.size() >= 4 && approx.size() <= 6)
         {
             // Number of vertices of polygonal curve
             int vtc = (int)approx.size();
@@ -137,24 +156,38 @@ int main()
             // Use the degrees obtained above and the number of vertices
             // to determine the shape of the contour
             //if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
-            if (vtc == 4 )
-                setLabel(dst, "RECT", contours[i]);
-            else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
-                setLabel(dst, "PENTA", contours[i]);
-            else if (vtc == 6 && mincos >= -0.55 && maxcos <= -0.45)
-                setLabel(dst, "HEXA", contours[i]);
+            if (vtc == 4 && mincos >= -0.4 && maxcos <= 0.4) {
+                //setLabel(dst, "RECT", contours[i]);
+                continue;
+            }
+//            else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
+//                setLabel(dst, "PENTA", contours[i]);
+//            else if (vtc == 6 && mincos >= -0.55 && maxcos <= -0.45)
+//                setLabel(dst, "HEXA", contours[i]);
         }
-        else
-        {
-            // Detect and label circles
-            double area = cv::contourArea(contours[i]);
-            cv::Rect r = cv::boundingRect(contours[i]);
-            int radius = r.width / 2;
-            
-            if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
-                std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
-                setLabel(dst, "CIR", contours[i]);
+//        else
+//        {
+//            // Detect and label circles
+//            double area = cv::contourArea(contours[i]);
+//            cv::Rect r = cv::boundingRect(contours[i]);
+//            int radius = r.width / 2;
+//            
+//            if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
+//                std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
+//                setLabel(dst, "CIR", contours[i]);
+//        }
+        
+        //Symbol Recognition
+        if(approx.size() == 9 && !cv::isContourConvex(approx)) {
+            setLabel(dst, "T", contours[i]);
+            continue;
         }
+        std::ostringstream strb;
+        strb<<cv::boundingRect(approx).tl();
+        setLabel(dst, strb.str(), contours[i]);
+        //cv::rectangle(dst, cv::boundingRect(approx), cv::Scalar(255,255,255));
+
+        
     }
     
     cv::imshow("dst", dst);
