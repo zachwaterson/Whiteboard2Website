@@ -39,7 +39,7 @@ struct item_comp
 {
     inline bool operator() (const std::pair<cv::Rect, elementType>& struct1, const std::pair<cv::Rect, elementType>& struct2)
     {
-        return (struct1.first.area() > struct2.first.area());
+        return (struct1.first.size().height > struct2.first.size().height);
     }
 };
 
@@ -346,7 +346,10 @@ int main()
             default:
                 break;
         }
-        setLabel(res, type, items[i].first, CV_RGB(128, 255, 255));
+        //setLabel(res, type, items[i].first, CV_RGB(128, 255, 255));
+        std::stringstream oss;
+        oss<<items[i].first.size().width<<"w, "<<items[i].first.size().height<<"h @ ("<<items[i].first.tl().x<<","<<items[i].first.tl().y<<")";
+        setLabel(res, oss.str(), items[i].first, CV_RGB(128, 255, 255));
     }
     
     std::sort(items.begin(), items.end(), item_comp());

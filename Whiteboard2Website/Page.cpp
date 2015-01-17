@@ -11,7 +11,7 @@
 #include <cmath>
 
 #define PEER_HEIGHT_PERCENT 0.4
-#define PEER_Y_BUFFER 20
+#define PEER_Y_BUFFER 50
 
 Element::Element(cv::Rect rectangle, elementType inputType): x(rectangle.x), y(rectangle.y), width(rectangle.width), height(rectangle.height), type(inputType) {
 
@@ -49,20 +49,25 @@ void Row::layout() {
     
 }
 
-struct row_comp
-{
-    inline bool operator() (const Row row1, const Row row2)
-    {
-        return (row1.keyElement.y < row2.keyElement.y ? -1 : 1);
-    }
-};
+int compareRows(const Row row1, const Row row2) {
+    int value = row1.keyElement.y < row2.keyElement.y; // ? -1 : 1;
+    return value;
+}
 
 void Row::sortSubrows() {
-    std::sort(subRows.begin(), subRows.end(), row_comp());
+    std::sort(subRows.begin(), subRows.end(), compareRows);
+    for (int i = 0; i < subRows.size(); i++) {
+        subRows[i].sortSubrows();
+    }
 }
 
 void Page::sortRows() {
-    std::sort(rows.begin(), rows.end(), row_comp());
+    //sort initial rows
+    std::sort(rows.begin(), rows.end(), compareRows);
+    //sort subrows
+    for (int i = 0; i < rows.size(); i++) {
+        rows[i].sortSubrows();
+    }
 
 }
 
