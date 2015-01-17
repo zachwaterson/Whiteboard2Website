@@ -11,6 +11,7 @@
 		9283E6771A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */; };
 		9283E6781A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */; };
 		9283E67A1A6A24DD00A7CA44 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9283E6791A6A24DD00A7CA44 /* main.cpp */; };
+		92D5CDA41A6A362200DCFF82 /* Page.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92D5CDA21A6A362200DCFF82 /* Page.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +33,9 @@
 		9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_imgproc.2.4.10.dylib; sourceTree = "<group>"; };
 		9283E6791A6A24DD00A7CA44 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Whiteboard2Website/main.cpp; sourceTree = SOURCE_ROOT; };
 		92D5CDA01A6A2BA400DCFF82 /* whiteboard-small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "whiteboard-small.jpg"; path = "Whiteboard2Website/whiteboard-small.jpg"; sourceTree = SOURCE_ROOT; };
+		92D5CDA11A6A327F00DCFF82 /* whiteboard-nested.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "whiteboard-nested.jpg"; path = "Whiteboard2Website/whiteboard-nested.jpg"; sourceTree = SOURCE_ROOT; };
+		92D5CDA21A6A362200DCFF82 /* Page.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Page.cpp; path = Whiteboard2Website/Page.cpp; sourceTree = SOURCE_ROOT; };
+		92D5CDA31A6A362200DCFF82 /* Page.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Page.h; path = Whiteboard2Website/Page.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +75,10 @@
 			isa = PBXGroup;
 			children = (
 				9283E6791A6A24DD00A7CA44 /* main.cpp */,
+				92D5CDA21A6A362200DCFF82 /* Page.cpp */,
+				92D5CDA31A6A362200DCFF82 /* Page.h */,
 				92D5CDA01A6A2BA400DCFF82 /* whiteboard-small.jpg */,
+				92D5CDA11A6A327F00DCFF82 /* whiteboard-nested.jpg */,
 			);
 			name = Whiteboard2Website;
 			path = OpenCVTest;
@@ -133,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92D5CDA41A6A362200DCFF82 /* Page.cpp in Sources */,
 				9283E67A1A6A24DD00A7CA44 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

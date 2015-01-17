@@ -2,7 +2,7 @@
 ////  main.cpp
 ////  OpenCVTest
 ////
-////  Created by Zach Waterson on 1/16/15.
+////  Created by Zach Waterson on 1/17/15.
 ////  Copyright (c) 2015 Zach Waterson. All rights reserved.
 ////
 //
@@ -34,6 +34,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cmath>
 #include <iostream>
+#include "Page.h"
 
 /**
  * Helper function to find a cosine of angle between vectors
@@ -88,7 +89,7 @@ int main()
     
     //erode
     cv::Mat final;
-    cv::Mat eroder = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5,5));
+    cv::Mat eroder = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,3));
     cv::erode(threshed, final, eroder);
     
     // Use Canny instead of threshold to catch squares with gradient shading
