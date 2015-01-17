@@ -108,16 +108,37 @@ bool checkL(std::vector<cv::Point> approx) {
     return foundTL && foundBL && foundBR && !foundTR;
 }
 
-bool checkP(std::vector<cv::Point> approx) {
-    // Detect and label circles
-    double area = cv::contourArea(approx);
-    cv::Rect r = cv::boundingRect(approx);
-    int radius = r.width / 2;
-
-    if (std::abs(1 - ((double)r.width / r.height)) <= 0.2 &&
-        std::abs(1 - (area / (CV_PI * std::pow(radius, 2)))) <= 0.2)
-        return true;
-    return false;
+bool checkPic(std::vector<cv::Point> approx) {
+    cv::Rect bound = cv::boundingRect(approx);
+    double minDist = bound.area() / 150;
+    cv::Point tl = bound.tl();
+    cv::Point tr = tl;
+    tr.x += bound.width;
+    cv::Point bl = tl;
+    bl.y += bound.height;
+    cv::Point br = bound.br();
+    
+    bool foundTL = false;
+    bool foundTR = false;
+    bool foundBL = false;
+    bool foundBR = false;
+    
+    for (int i = 0; i < approx.size(); i++) {
+        if (distance(approx[i], tl) < minDist) {
+            foundTL = true;
+        }
+        if (distance(approx[i], tr) < minDist) {
+            foundTR = true;
+        }
+        if (distance(approx[i], bl) < minDist) {
+            foundBL = true;
+        }
+        if (distance(approx[i], br) < minDist) {
+            foundBR = true;
+        }
+    }
+    
+    return foundTL && foundBL && foundBR && foundTR;
 }
 
 bool checkT(std::vector<cv::Point> approx) {
@@ -144,7 +165,7 @@ bool checkT(std::vector<cv::Point> approx) {
             foundBL = true;
         }
     }
-    return foundTL && foundTR && !foundBL;
+    return foundTL && foundTR && foundBL;
 }
 
 cv::Rect findContainer(cv::Rect r, std::vector<cv::Rect> rects) {
@@ -209,7 +230,7 @@ int main()
         for (int j = 0; j < boxes.size() && !alreadyFound; j++) {
             cv::Rect bound = cv::boundingRect(approx);
 
-            if(distance(boxes[j].tl(), bound.tl()) < (bound.width / 5))
+            if(distance(boxes[j].tl(), bound.tl()) < (bound.width / 8))
                 alreadyFound = true;
         }
         
@@ -236,7 +257,7 @@ int main()
         
         // Otherwise, start looking for shapes
         //setLabel(dst, "SHAPE", contours[i]);
-        if (approx.size() >= 4 && approx.size() <= 6)
+        if (approx.size() >= 4 && approx.size() <= 6 && cv::isContourConvex(approx))
         {
             // Number of vertices of polygonal curve
             int vtc = (int)approx.size();
@@ -256,7 +277,7 @@ int main()
             // Use the degrees obtained above and the number of vertices
             // to determine the shape of the contour
             //if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
-            if (vtc == 4 && mincos >= -0.4 && maxcos <= 0.4) {
+            if (mincos >= -0.5 && maxcos <= 0.5) {
                 //setLabel(dst, "RECT", contours[i]);
                 continue;
             }
@@ -274,6 +295,13 @@ int main()
     for (int i = 0; i < symbols.size(); i++) {
         approx = symbols[i];
         //Symbol Recognition
+        if (checkPic(approx)) {
+            setLabel(dst, "PIC", approx);
+            cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
+            cv::rectangle(dst, div, cv::Scalar(244,244,188));
+            items.push_back(std::make_pair(div, Image));
+            continue;
+        }
         if (checkT(approx)) {
             setLabel(dst, "TEXT", approx);
             cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
@@ -286,13 +314,6 @@ int main()
             cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
             cv::rectangle(dst, div, cv::Scalar(244,188,244));
             items.push_back(std::make_pair(div, Link));
-            continue;
-        }
-        if (checkP(approx)) {
-            setLabel(dst, "PIC", approx);
-            cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
-            cv::rectangle(dst, div, cv::Scalar(244,244,188));
-            items.push_back(std::make_pair(div, Image));
             continue;
         }
     }
