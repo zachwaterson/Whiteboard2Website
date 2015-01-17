@@ -182,8 +182,11 @@ int main()
     std::getline( std::cin, filename );
     
     cv::Mat src = cv::imread(filename);
-    if (src.empty())
+    if (src.empty()) {
+        std::cout << "Image not found" << std::endl;
         return -1;
+
+    }
     
     // Convert to grayscale
     cv::Mat gray;
