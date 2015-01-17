@@ -152,7 +152,6 @@ bool checkT(std::vector<cv::Point> approx) {
     
     bool foundTL = false;
     bool foundTR = false;
-    bool foundBL = false;
     
     for (int i = 0; i < approx.size(); i++) {
         if (distance(approx[i], tl) < minDist) {
@@ -161,11 +160,8 @@ bool checkT(std::vector<cv::Point> approx) {
         if (distance(approx[i], tr) < minDist) {
             foundTR = true;
         }
-        if (distance(approx[i], bl) < minDist) {
-            foundBL = true;
-        }
     }
-    return foundTL && foundTR && foundBL;
+    return foundTL && foundTR;
 }
 
 cv::Rect findContainer(cv::Rect r, std::vector<cv::Rect> rects) {
@@ -302,18 +298,18 @@ int main()
             items.push_back(std::make_pair(div, Image));
             continue;
         }
-        if (checkT(approx)) {
-            setLabel(dst, "TEXT", approx);
-            cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
-            cv::rectangle(dst, div, cv::Scalar(255,255,0));
-            items.push_back(std::make_pair(div, Text));
-            continue;
-        }
         if (checkL(approx)) {
             setLabel(dst, "LINK", approx);
             cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
             cv::rectangle(dst, div, cv::Scalar(244,188,244));
             items.push_back(std::make_pair(div, Link));
+            continue;
+        }
+        if (checkT(approx)) {
+            setLabel(dst, "TEXT", approx);
+            cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
+            cv::rectangle(dst, div, cv::Scalar(255,255,0));
+            items.push_back(std::make_pair(div, Text));
             continue;
         }
     }
