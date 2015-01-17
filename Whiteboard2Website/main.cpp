@@ -77,6 +77,7 @@ int main()
     
     std::vector<cv::Point> approx;
     cv::Mat dst = final.clone();
+    cv::Mat empty = cv::Mat::zeros(final.size().height, final.size().width, CV_8UC1);
     
     std::vector<cv::Rect> boxes;
     
@@ -92,13 +93,15 @@ int main()
 
             double dx = boxes[j].tl().x - bound.tl().x;
             double dy = boxes[j].tl().y - bound.tl().y;
-            if(sqrt(dx*dx + dy*dy) < (bound.width / 8))
+            if(sqrt(dx*dx + dy*dy) < (bound.width / 5))
                 alreadyFound = true;
             
             //std::cout<<boxes[j].tl().x<<", "<<boxes[j].tl().y<<" vs "<<bound.tl().x<<", "<<bound.tl().y<<" dist: "<<sqrt(dx*dx + dy*dy)<<std::endl;
         }
         
         if(alreadyFound) {
+            contours.erase(contours.begin() + i);
+            i--;
             continue;
         }
         
@@ -163,6 +166,14 @@ int main()
         setLabel(dst, strb.str(), contours[i]);
         
     }
+    
+//    cv::drawContours( empty, contours, 10, cv::Scalar(128,255,255), 3);
+    
+    cv::Scalar color(128, 255, 255);
+    for (int i = 0; i < contours.size(); i++){
+        drawContours(empty, contours, i, color, 1, 8);
+    }
+    imshow("contours", empty);
     
     cv::imshow("dst", dst);
     cv::waitKey(0);
