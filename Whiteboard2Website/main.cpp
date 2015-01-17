@@ -39,7 +39,7 @@ struct item_comp
 {
     inline bool operator() (const std::pair<cv::Rect, elementType>& struct1, const std::pair<cv::Rect, elementType>& struct2)
     {
-        return (struct1.first.area() < struct2.first.area());
+        return (struct1.first.area() > struct2.first.area());
     }
 };
 
