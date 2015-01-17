@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9283E6571A6A0CB100A7CA44 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9283E6561A6A0CB100A7CA44 /* main.cpp */; };
 		9283E6761A6A151500A7CA44 /* libopencv_core.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6731A6A151500A7CA44 /* libopencv_core.2.4.10.dylib */; };
 		9283E6771A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */; };
 		9283E6781A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */; };
+		9283E67A1A6A24DD00A7CA44 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9283E6791A6A24DD00A7CA44 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,10 +27,10 @@
 
 /* Begin PBXFileReference section */
 		9283E6531A6A0CB100A7CA44 /* Whiteboard2Website */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Whiteboard2Website; sourceTree = BUILT_PRODUCTS_DIR; };
-		9283E6561A6A0CB100A7CA44 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		9283E6731A6A151500A7CA44 /* libopencv_core.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_core.2.4.10.dylib; sourceTree = "<group>"; };
 		9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_highgui.2.4.10.dylib; sourceTree = "<group>"; };
 		9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_imgproc.2.4.10.dylib; sourceTree = "<group>"; };
+		9283E6791A6A24DD00A7CA44 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Whiteboard2Website/main.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +53,7 @@
 				9283E6731A6A151500A7CA44 /* libopencv_core.2.4.10.dylib */,
 				9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */,
 				9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */,
-				9283E6551A6A0CB100A7CA44 /* OpenCVTest */,
+				9283E6551A6A0CB100A7CA44 /* Whiteboard2Website */,
 				9283E6541A6A0CB100A7CA44 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,11 +66,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9283E6551A6A0CB100A7CA44 /* OpenCVTest */ = {
+		9283E6551A6A0CB100A7CA44 /* Whiteboard2Website */ = {
 			isa = PBXGroup;
 			children = (
-				9283E6561A6A0CB100A7CA44 /* main.cpp */,
+				9283E6791A6A24DD00A7CA44 /* main.cpp */,
 			);
+			name = Whiteboard2Website;
 			path = OpenCVTest;
 			sourceTree = "<group>";
 		};
@@ -130,7 +131,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9283E6571A6A0CB100A7CA44 /* main.cpp in Sources */,
+				9283E67A1A6A24DD00A7CA44 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +263,7 @@
 				9283E65C1A6A0CB100A7CA44 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
