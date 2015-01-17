@@ -5,30 +5,6 @@
 ////  Created by Zach Waterson on 1/16/15.
 ////  Copyright (c) 2015 Zach Waterson. All rights reserved.
 ////
-//
-//#include <iostream>
-//#include <opencv2/opencv.hpp>
-//
-//using namespace std;
-//using namespace cv;
-//
-//int main (int argc, const char * argv[])
-//{
-//    Mat img = imread("/Users/Zach/Desktop/joey.png"); //Change the image path here.
-//    if (img.data == 0) {
-//        cerr << "Image not found!" << endl;
-//        return -1;
-//    }
-//    namedWindow("image", CV_WINDOW_AUTOSIZE);
-//    imshow("image", img);
-//    waitKey();
-//}
-
-/**
- * Simple shape detector program.
- * It loads an image and tries to find simple shapes (rectangle, triangle, circle, etc) in it.
- * This program is a modified version of `squares.cpp` found in the OpenCV sample dir.
- */
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -116,7 +92,7 @@ int main()
 
             double dx = boxes[j].tl().x - bound.tl().x;
             double dy = boxes[j].tl().y - bound.tl().y;
-            if(sqrt(dx*dx + dy*dy) < 15)
+            if(sqrt(dx*dx + dy*dy) < (bound.width / 8))
                 alreadyFound = true;
             
             //std::cout<<boxes[j].tl().x<<", "<<boxes[j].tl().y<<" vs "<<bound.tl().x<<", "<<bound.tl().y<<" dist: "<<sqrt(dx*dx + dy*dy)<<std::endl;
@@ -157,7 +133,7 @@ int main()
             // to determine the shape of the contour
             //if (vtc == 4 && mincos >= -0.1 && maxcos <= 0.3)
             if (vtc == 4 && mincos >= -0.4 && maxcos <= 0.4) {
-                //setLabel(dst, "RECT", contours[i]);
+                setLabel(dst, "RECT", contours[i]);
                 continue;
             }
 //            else if (vtc == 5 && mincos >= -0.34 && maxcos <= -0.27)
@@ -185,8 +161,6 @@ int main()
         std::ostringstream strb;
         strb<<cv::boundingRect(approx).tl();
         setLabel(dst, strb.str(), contours[i]);
-        //cv::rectangle(dst, cv::boundingRect(approx), cv::Scalar(255,255,255));
-
         
     }
     
