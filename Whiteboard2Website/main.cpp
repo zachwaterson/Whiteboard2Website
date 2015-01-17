@@ -69,7 +69,12 @@ void setLabel(cv::Mat& im, const std::string label, std::vector<cv::Point>& cont
 int main()
 {
     //cv::Mat src = cv::imread("polygon.png");
-    cv::Mat src = cv::imread("/Users/Zach/Desktop/whiteboard-small.jpg");
+    std::string filename;
+    
+    std::cout << "Please enter the path of the image: ";
+    std::getline( std::cin, filename );
+    
+    cv::Mat src = cv::imread(filename);
     if (src.empty())
         return -1;
     

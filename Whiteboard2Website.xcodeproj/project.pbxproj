@@ -31,6 +31,7 @@
 		9283E6741A6A151500A7CA44 /* libopencv_highgui.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_highgui.2.4.10.dylib; sourceTree = "<group>"; };
 		9283E6751A6A151500A7CA44 /* libopencv_imgproc.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libopencv_imgproc.2.4.10.dylib; sourceTree = "<group>"; };
 		9283E6791A6A24DD00A7CA44 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Whiteboard2Website/main.cpp; sourceTree = SOURCE_ROOT; };
+		92D5CDA01A6A2BA400DCFF82 /* whiteboard-small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "whiteboard-small.jpg"; path = "Whiteboard2Website/whiteboard-small.jpg"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				9283E6791A6A24DD00A7CA44 /* main.cpp */,
+				92D5CDA01A6A2BA400DCFF82 /* whiteboard-small.jpg */,
 			);
 			name = Whiteboard2Website;
 			path = OpenCVTest;
