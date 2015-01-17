@@ -35,6 +35,14 @@ static bool rectContains(cv::Rect r1, cv::Rect r2) {
     return r1.contains(r2.tl()) && r1.contains(r2.br());
 }
 
+struct item_comp
+{
+    inline bool operator() (const std::pair<cv::Rect, elementType>& struct1, const std::pair<cv::Rect, elementType>& struct2)
+    {
+        return (struct1.first.area() < struct2.first.area());
+    }
+};
+
 /**
  * Helper function to display text in the center of a contour
  */
@@ -114,7 +122,7 @@ bool checkP(std::vector<cv::Point> approx) {
 
 bool checkT(std::vector<cv::Point> approx) {
     cv::Rect bound = cv::boundingRect(approx);
-    double minDist = bound.area() / 150;
+    double minDist = bound.area() / 200;
     cv::Point tl = bound.tl();
     cv::Point tr = tl;
     tr.x += bound.width;
@@ -186,7 +194,7 @@ int main()
     cv::Mat empty = cv::Mat::zeros(final.size().height, final.size().width, CV_8UC1);
     
     std::vector<cv::Rect> boxes;
-    std::vector<std::pair<cv::Rect, int>> items;
+    std::vector<std::pair<cv::Rect, elementType>> items;
     
     // We must save these intially so we can analyze them once all of the bounding boxes have been located
     std::vector<std::vector<cv::Point>> symbols;
@@ -270,21 +278,21 @@ int main()
             setLabel(dst, "TEXT", approx);
             cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
             cv::rectangle(dst, div, cv::Scalar(255,255,0));
-            items.push_back(std::make_pair(div, 0));
+            items.push_back(std::make_pair(div, Text));
             continue;
         }
         if (checkL(approx)) {
             setLabel(dst, "LINK", approx);
             cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
             cv::rectangle(dst, div, cv::Scalar(244,188,244));
-            items.push_back(std::make_pair(div, 1));
+            items.push_back(std::make_pair(div, Link));
             continue;
         }
         if (checkP(approx)) {
             setLabel(dst, "PIC", approx);
             cv::Rect div = findContainer(cv::boundingRect(approx), boxes);
             cv::rectangle(dst, div, cv::Scalar(244,244,188));
-            items.push_back(std::make_pair(div, 2));
+            items.push_back(std::make_pair(div, Image));
             continue;
         }
     }
@@ -306,19 +314,29 @@ int main()
         cv::rectangle(res, items[i].first, CV_RGB(128, 255, 255));
         std::string type = "";
         switch (items[i].second) {
-            case 0:
+            case Text:
                 type = "TEXT";
                 break;
-            case 1:
+            case Link:
                 type = "LINK";
                 break;
-            case 2:
+            case Image:
                 type = "PIC";
                 break;
             default:
                 break;
         }
         setLabel(res, type, items[i].first, CV_RGB(128, 255, 255));
+    }
+    
+    std::sort(items.begin(), items.end(), item_comp());
+    
+    //Now make the Page
+    Page p;
+    p.pageWidth = 1024;
+    p.pageHeight = 728;
+    for (int i = 0; i < items.size(); i++) {
+        p.addElementWithinRows(items[i].first, items[i].second, p.rows);
     }
     
     
