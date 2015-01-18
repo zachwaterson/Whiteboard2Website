@@ -46,6 +46,7 @@ Analyzer::Analyzer(std::string aFileName) : fileName(aFileName ) {
 }
 
 Page Analyzer::createPage() {
+    int threshold = 125;
     
     cv::Mat src = cv::imread(fileName);
     if (src.empty()) {
@@ -59,7 +60,7 @@ Page Analyzer::createPage() {
     
     //threshold image
     cv::Mat threshed;
-    cv::threshold(gray, threshed, 135, 255, 0);
+    cv::threshold(gray, threshed, threshold, 255, 0);
     
     //erode
     cv::Mat final;

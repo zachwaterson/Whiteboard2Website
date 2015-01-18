@@ -11,7 +11,7 @@
 #include <cmath>
 
 #define PEER_HEIGHT_PERCENT 0.4
-#define PEER_Y_BUFFER 50
+#define PEER_Y_BUFFER 30
 
 Element::Element(cv::Rect rectangle, elementType inputType): x(rectangle.x), y(rectangle.y), width(rectangle.width), height(rectangle.height), type(inputType) {
 
@@ -154,10 +154,10 @@ std::string Element::generateHTMLForParent(Element *parent) {
             HTML << "<div class='col-sm-"<<columnSize<<"'><h3 class='text-center'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse viverra ex sed aliquet dignissim. Proin nulla mi, posuere non nulla vel, condimentum finibus orci. Integer vulputate dignissim lorem, in aliquam nibh vehicula eget. Nullam ullamcorper feugiat dolor a bibendum. Quisque laoreet pulvinar purus ac tristique. Suspendisse ullamcorper scelerisque dictum. Vestibulum id efficitur erat, non pharetra enim. Nunc condimentum justo in leo mattis porta.</h3></div>";
             break;
         case Image:
-            HTML << "<div class='col-sm-"<<columnSize<<"'><img class='img-responsive' src='http://www.myfico.com/Images/sample_overlay.gif'></img></div>";
+            HTML << "<div class='col-sm-"<<columnSize<<"'><img class='img-responsive center-block' src='http://www3.nd.edu/~kgsa/springmainbd.jpg'></img></div>";
             break;
         case Link:
-            HTML << "<div class='col-sm-"<<columnSize<<"'><a href='#'>Link</a></div>";
+            HTML << "<div class='col-sm-"<<columnSize<<"'><a class='btn btn-default center-block' style= 'max-width: 100px;' href='nd.edu'>Link</a></div>";
             break;
         case Spacing:
             HTML << "<div class='col-sm-"<<columnSize<<"'></div>";
@@ -174,14 +174,26 @@ std::string Row::generateHTMLForParent(Element *parent) {
     int columnSize = 12*width/parent->width;
     
     std::stringstream HTML;
+    int matchingIndex = -1;
     
     //find yourself in the parent's array
+    if (parent->type == TypeRow) {
+        Row *R = static_cast<Row*>(parent);
+        for (int i = 0; i < R->allElements.size(); i++) {
+            if (this == R->allElements[i]) {
+                matchingIndex = i;
+                break;
+            }
+        }
+    }
     
-    
-    //if parent isn't page and element on left side isn't a row
-    if (parent->type != TypePage) {
-        HTML << "<div class='col-sm-"<<columnSize<<"'>";
-
+    //if parent is a row and element on left side isn't a row
+    if(parent->type == TypeRow) {
+        if (matchingIndex - 1 >= 0) {
+            if (static_cast<Row*>(parent)->allElements[matchingIndex-1]->type != TypeRow) {
+                HTML << "<div class='col-sm-"<<columnSize<<"'>";
+            }
+        }
     }
     HTML << "<div class='row'>";
     for (int i = 0; i < allElements.size(); i++) {
@@ -189,9 +201,13 @@ std::string Row::generateHTMLForParent(Element *parent) {
     }
     
     HTML << "</div>";
-    //if parent isn't page and right element isn't a row
-    if (parent->type != TypePage) {
-        HTML << "</div>";
+    //if parent is a row and right element isn't a row
+    if(parent->type == TypeRow) {
+        if (matchingIndex + 1 < static_cast<Row*>(parent)->allElements.size()) {
+            if (static_cast<Row*>(parent)->allElements[matchingIndex+1]->type != TypeRow) {
+                HTML << "</div>";
+            }
+        }
     }
     return HTML.str();
 }
@@ -217,34 +233,34 @@ void Row::sortElements() {
 
 // This function assumes that the elements have already been sorted
 void Row::insertSpacing() {
-    int colWidth = width/12;
-    //First check the space at the front
-    double sp = (x - allElements[0]->x) / colWidth;
-    if (sp >= 1.0) {
-        //insert a spacing element in that area
-        int ispace = floor(sp);
-        Element *spaceElem = new Element(cv::Rect(0, y, ispace * colWidth, height), Spacing);
-        allElements.insert(allElements.begin(), spaceElem);
-    }
-    for (int i = 0; i < allElements.size()-1; i++) {
-        double space = abs(allElements[i]->x + allElements[i]->width - allElements[i+1]->x) / colWidth;
-        if (space >= 1.0) {
-            //insert a spacing element in that area
-            int ispace = floor(space);
-            Element *spaceElem = new Element(cv::Rect(allElements[i]->x + allElements[i]->width, y, ispace * colWidth, height), Spacing);
-            allElements.insert(allElements.begin() + i, spaceElem);
-            i++;
-        }
-    }
-    
-    //Now check the end of the row
-    sp = abs(allElements.back()->x + allElements.back()->width - (x+width)) /colWidth;
-    if (sp >= 1.0) {
-        //insert a spacing element in that area
-        int ispace = floor(sp);
-        Element *spaceElem = new Element(cv::Rect(0, y, ispace * colWidth, height), Spacing);
-        allElements.insert(allElements.end(), spaceElem);
-    }
+//    int colWidth = width/12;
+//    //First check the space at the front (for top-level stuff)
+//    double sp = (allElements[0]->x) / colWidth;
+//    if (sp >= 1.0) {
+//        //insert a spacing element in that area
+//        int ispace = floor(sp);
+//        Element *spaceElem = new Element(cv::Rect(0, y, ispace * colWidth, height), Spacing);
+//        allElements.insert(allElements.begin(), spaceElem);
+//    }
+//    for (int i = 0; i < allElements.size()-1; i++) {
+//        double space = abs(allElements[i]->x + allElements[i]->width - allElements[i+1]->x) / colWidth;
+//        if (space >= 1.0) {
+//            //insert a spacing element in that area
+//            int ispace = floor(space);
+//            Element *spaceElem = new Element(cv::Rect(allElements[i]->x + allElements[i]->width, y, ispace * colWidth, height), Spacing);
+//            allElements.insert(allElements.begin() + i + 1, spaceElem);
+//            i++;
+//        }
+//    }
+//    
+//    //Now check the end of the row
+//    sp = abs(allElements.back()->x + allElements.back()->width - (x+width)) /colWidth;
+//    if (sp >= 1.0) {
+//        //insert a spacing element in that area
+//        int ispace = floor(sp);
+//        Element *spaceElem = new Element(cv::Rect(0, y, ispace * colWidth, height), Spacing);
+//        allElements.insert(allElements.end(), spaceElem);
+//    }
 }
 
 void Row::consolidateRows() {
@@ -272,6 +288,7 @@ std::string Page::generateHTML() {
     "<meta http-equiv='X-UA-Compatible' content='IE=edge'>"
     "<meta name='viewport' content='width=device-width, initial-scale=1'>"
     "<title>Whiteboard2Website</title>"
+    "<style>a {font-size: 250%} .row {margin: 5px} body {padding: 10px} </style>"
 
     "<!-- Latest compiled and minified CSS -->"
     "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css'>"
@@ -279,12 +296,13 @@ std::string Page::generateHTML() {
     "<!-- Optional theme -->"
     "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css'>"
     
+    "<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->"
+    "<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>"
     "<!-- Latest compiled and minified JavaScript -->"
     "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js'></script>"
-    "<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->"
-                 "<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>"
-                 "</head>"
-                 "<body>";
+
+     "</head>"
+     "<body>";
     
     for (int i = 0; i < rows.size(); i++) {
         HTML << rows[i]->generateHTMLForParent(this);
