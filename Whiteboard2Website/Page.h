@@ -17,6 +17,9 @@ typedef enum : int {
     Text,
     Image,
     Link,
+    TypeRow,
+    TypePage,
+    Spacing
 } elementType;
 
 class Element {
@@ -27,41 +30,44 @@ public:
     int width;
     int height;
     Element(cv::Rect rectangle, elementType type);
-    std::string generateHTML();
     
+    virtual std::string generateHTMLForParent(Element *Parent);
+
 private:
     
 };
 
-class Row {
+class Row : public Element {
 public:
-    Element keyElement;
-    std::vector<Row> subRows;
-    std::vector<Element> allElements;
-    Row(Element element);
-    bool shouldContainAsPeer(Element element); //if y and size are within 80% of key element
-    bool shouldContainAsChild(Element element); //if y and size are less than 80% of key element
-//    bool shouldBeContainedBy(Element element); //if y and size eclipse key element
-    void layout();
+    Element *keyElement;
+    std::vector<Row *> subRows;
+    std::vector<Element *> allElements;
+    Row(Element *element);
+    bool shouldContainAsPeer(Element *element); //if y and size are within 80% of key element
+    bool shouldContainAsChild(Element *element); //if y and size are less than 80% of key element
     void sortSubrows();
+    void sortElements();
+    void updateFrame();
+    void consolidateRows();
+    std::string determineAndGenerateSpacing(int currentX, int nextX);
+    virtual std::string generateHTMLForParent(Element *Parent);
+    void insertSpacing();
 };
 
-class Page {
+class Page : public Element {
 public:
-    void addElement(Element element);
-    double pageHeight;
-    double pageWidth;
-    void addElementWithinRows(cv::Rect rectangle, elementType type, std::vector<Row> &rowVector);
-    void addAndSortElement(cv::Rect rectangle, elementType type, std::vector<Row> &rowVector);
+    Page(cv::Rect r);
+    void addElement(Element *element);
+    void addElementWithinRows(cv::Rect rectangle, elementType type, std::vector<Row *> &rowVector);
+    void addAndSortElement(cv::Rect rectangle, elementType type, std::vector<Row *> &rowVector);
     std::string generateHTML();
-    std::vector<Row> rows; //top level rows of page
+    std::vector<Row *> rows; //top level rows of page
     void sortRows();
     
 
 private:
-    std::vector<Element> elements; //list of every element
+    std::vector<Element *> elements; //list of every element
     void layoutRow(int rowIndex);
-    
     
 };
 

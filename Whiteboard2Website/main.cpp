@@ -194,7 +194,7 @@ int main()
     
     //threshold image
     cv::Mat threshed;
-    cv::threshold(gray, threshed, 140, 255, 0);
+    cv::threshold(gray, threshed, 135, 255, 0);
     
     //erode
     cv::Mat final;
@@ -355,9 +355,7 @@ int main()
     std::sort(items.begin(), items.end(), item_comp());
     
     //Now make the Page
-    Page p;
-    p.pageWidth = 1024;
-    p.pageHeight = 728;
+    Page p(cv::Rect(0,0,600, 800));
     for (int i = 0; i < items.size(); i++) {
         p.addAndSortElement(items[i].first, items[i].second, p.rows);
     }
@@ -366,6 +364,7 @@ int main()
     imshow("contours", empty);
     cv::imshow("results", res);
     cv::imshow("dst", dst);
+    std::cout<<p.generateHTML()<<std::endl;
     cv::waitKey(0);
     return 0;
 }

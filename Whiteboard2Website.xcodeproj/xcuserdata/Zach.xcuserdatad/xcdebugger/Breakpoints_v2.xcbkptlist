@@ -9,45 +9,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Whiteboard2Website/main.cpp"
-            timestampString = "443166137.38899"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
-            landmarkName = "checkL(std::vector&lt;cv::Point&gt; approx)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Whiteboard2Website/main.cpp"
-            timestampString = "443167299.983917"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "checkL(std::vector&lt;cv::Point&gt; approx)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Whiteboard2Website/Page.cpp"
-            timestampString = "443211456.318414"
+            timestampString = "443240908.023864"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "Page::addElementWithinRows(cv::Rect rectangle, elementType type, std::vector&lt;Row&gt; &amp;rowVector)"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
+            landmarkName = "Row::updateFrame()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -58,29 +26,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Whiteboard2Website/Page.cpp"
-            timestampString = "443211456.318414"
+            timestampString = "443240908.023864"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "Page::sortRows()"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
+            landmarkName = "Row::updateFrame()"
             landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Whiteboard2Website/Page.cpp"
-            timestampString = "443211456.318414"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "compareRows(const Row row1, const Row row2)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
