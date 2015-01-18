@@ -211,16 +211,34 @@ void Row::sortElements() {
 
 // This function assumes that the elements have already been sorted
 void Row::insertSpacing() {
-//    int colWidth = width/12;
-//    for (int i = 0; i < allElements.size()-1; i++) {
-//        double space = (allElements[i]->x + allElements[i]->width - allElements[i+1]->x) / colWidth;
-//        if (space >= 1.0) {
-//            //insert a spacing element in that area
-//            int ispace = floor(space);
-//            Element *spaceElem = new Element(cv::Rect(allElements[i]->x + allElements[i]->width, y, ispace * colWidth, height), Spacing);
-//            allElements.insert(allElements.begin() + i, spaceElem);
-//        }
-//    }
+    int colWidth = width/12;
+    //First check the space at the front
+    double sp = (x - allElements[0]->x) / colWidth;
+    if (sp >= 1.0) {
+        //insert a spacing element in that area
+        int ispace = floor(sp);
+        Element *spaceElem = new Element(cv::Rect(0, y, ispace * colWidth, height), Spacing);
+        allElements.insert(allElements.begin(), spaceElem);
+    }
+    for (int i = 0; i < allElements.size()-1; i++) {
+        double space = abs(allElements[i]->x + allElements[i]->width - allElements[i+1]->x) / colWidth;
+        if (space >= 1.0) {
+            //insert a spacing element in that area
+            int ispace = floor(space);
+            Element *spaceElem = new Element(cv::Rect(allElements[i]->x + allElements[i]->width, y, ispace * colWidth, height), Spacing);
+            allElements.insert(allElements.begin() + i, spaceElem);
+            i++;
+        }
+    }
+    
+    //Now check the end of the row
+    sp = abs(allElements.back()->x + allElements.back()->width - (x+width)) /colWidth;
+    if (sp >= 1.0) {
+        //insert a spacing element in that area
+        int ispace = floor(sp);
+        Element *spaceElem = new Element(cv::Rect(0, y, ispace * colWidth, height), Spacing);
+        allElements.insert(allElements.end(), spaceElem);
+    }
 }
 
 void Row::consolidateRows() {
