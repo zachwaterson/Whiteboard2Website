@@ -11,7 +11,7 @@
 #include <cmath>
 
 #define PEER_HEIGHT_PERCENT 0.4
-#define PEER_Y_BUFFER 30
+#define PEER_Y_BUFFER 35
 
 Element::Element(cv::Rect rectangle, elementType inputType): x(rectangle.x), y(rectangle.y), width(rectangle.width), height(rectangle.height), type(inputType) {
 
@@ -157,7 +157,7 @@ std::string Element::generateHTMLForParent(Element *parent) {
             HTML << "<div class='col-sm-"<<columnSize<<"'><img class='img-responsive center-block' src='http://www3.nd.edu/~kgsa/springmainbd.jpg'></img></div>";
             break;
         case Link:
-            HTML << "<div class='col-sm-"<<columnSize<<"'><a class='btn btn-default center-block' style= 'max-width: 100px;' href='nd.edu'>Link</a></div>";
+            HTML << "<div class='col-sm-"<<columnSize<<"'><a class='btn btn-default center-block' style= 'max-width: 100px;' href='http://www.nd.edu'>Link</a></div>";
             break;
         case Spacing:
             HTML << "<div class='col-sm-"<<columnSize<<"'></div>";
@@ -207,6 +207,10 @@ std::string Row::generateHTMLForParent(Element *parent) {
             if (static_cast<Row*>(parent)->allElements[matchingIndex+1]->type != TypeRow) {
                 HTML << "</div>";
             }
+        } else {
+            //close if no more peers
+            HTML << "</div>";
+
         }
     }
     return HTML.str();
