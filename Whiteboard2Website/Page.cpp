@@ -174,6 +174,11 @@ std::string Row::generateHTMLForParent(Element *parent) {
     int columnSize = 12*width/parent->width;
     
     std::stringstream HTML;
+    
+    //find yourself in the parent's array
+    
+    
+    //if parent isn't page and element on left side isn't a row
     if (parent->type != TypePage) {
         HTML << "<div class='col-sm-"<<columnSize<<"'>";
 
@@ -184,6 +189,7 @@ std::string Row::generateHTMLForParent(Element *parent) {
     }
     
     HTML << "</div>";
+    //if parent isn't page and right element isn't a row
     if (parent->type != TypePage) {
         HTML << "</div>";
     }
